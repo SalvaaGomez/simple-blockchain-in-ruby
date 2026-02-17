@@ -3,13 +3,13 @@ class Block
 							:transactions_count, :previous_hash, 
 							:nonce, :hash 
 
-  def initialize(index, transactions, previous_hash)
-    @index         		 	 = index
-    @timestamp      	 	 = Time.now
-    @transactions 	 		 = transactions
-		@transactions_count  = transactions.size
-    @previous_hash 		 	 = previous_hash
-    @nonce, @hash  		 	 = compute_hash_with_proof_of_work
+  def initialize(index, timestamp, data, previous_hash, creator)
+    @index = index
+    @timestamp = timestamp
+    @data = data
+    @previous_hash = previous_hash
+    @creator = creator
+    @nonce, @hash = compute_hash_with_proof_of_work
   end
 
 	def compute_hash_with_proof_of_work(difficulty="00")
@@ -37,10 +37,10 @@ class Block
 
   def self.first( *transactions )    # Create genesis block
     ## Uses index zero (0) and arbitrary previous_hash ("0")
-    Block.new( 0, transactions, "0" )
+    Block.new( 0, Time.now, "Esto es una modificación del génesis", "0", "Creador")
   end
 
   def self.next( previous, transactions )
-    Block.new( previous.index+1, transactions, previous.hash )
+    Block.new(previous.index+1, Time.now , transactions, previous.hash, "Creador")
   end
 end  # class Block
